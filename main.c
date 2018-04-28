@@ -24,16 +24,6 @@ int max(int a, int b){
 return b;
 }
 
-
-int compare_pixels(Pixel pixel1, Pixel pixel2) {
-    if (pixel1.r == pixel2.r &&
-        pixel1.g == pixel2.g &&
-        pixel1.b == pixel2.b)
-        return 1;
-    return 0;
-}
-
-
 Image grey_scale(Image image) {
 
     for (unsigned int i = 0; i < image.image_height; ++i) {
@@ -60,9 +50,9 @@ void blur(Image image, unsigned int blur_scale) {
             int min_image_width = min(i + blur_scale/2, image.image_width - 1);
             for(unsigned int x = max(0, i - blur_scale/2); x <= min_image_height; ++x) {
                 for(unsigned int y = max(0,j - blur_scale/2); y <= min_image_width; ++y) {
-                    media.red += pixel[x][y].red;
-                    media.green += pixel[x][y].green;
-                    media.blue += pixel[x][y].blue;
+                    media.red += image.pixel[x][y].red;
+                    media.green += image.pixel[x][y].green;
+                    media.blue += image.pixel[x][y].blue;
                 }
             }
 
@@ -70,14 +60,14 @@ void blur(Image image, unsigned int blur_scale) {
             media.green /= blur_scale * blur_scale;
             media.blue /= blur_scale * blur_scale;
 
-            pixel[i][j].red = media.red;
-            pixel[i][j].green = media.green;
-            pixel[i][j].blue = media.blue;
+            image.pixel[i][j].red = media.red;
+            image.pixel[i][j].green = media.green;
+            image.pixel[i][j].blue = media.blue;
         }
     }
 }
 
-Image rotate_right_90_degrees(Image img) {
+Image rotate_right_90_degrees(Image image) {
     Image rotated;
 
     rotated.image_width = image.image_height;
@@ -94,12 +84,12 @@ Image rotate_right_90_degrees(Image img) {
     return rotated;
 }
 
-void invert_colors(Image image) {
+Image invert_colors(Image image) {
     for (unsigned int i = 0; i < image.image_height; ++i) {
         for (unsigned int j = 0; j < image.image_width; ++j) {
-            pixel[i][j].red = 255 - pixel[i][j].red;
-            pixel[i][j].green = 255 - pixel[i][j].green;
-            pixel[i][j].blue = 255 - pixel[i][j].blue;
+            image.pixel[i][j].red = 255 - image.pixel[i][j].red;
+            image.pixel[i][j].green = 255 - image.pixel[i][j].green;
+            image.pixel[i][j].blue = 255 - image.pixel[i][j].blue;
         }
     }
 
@@ -233,11 +223,11 @@ int main() {
     Image image;
     int option, operation;
 
-    image = read_image(image)
+    image = read_image(image);
 
-    scanf("%d", &options);
+    scanf("%d", &option);
 
-    for(int i = 0; i < options; ++i) {
+    for(int i = 0; i < option; ++i) {
 
         scanf("%d", &option);
 
@@ -247,7 +237,7 @@ int main() {
                 break;
             }
             case 2: {
-                image = sepia(image)
+                image = sepia(image);
                 break;
             }
             case 3: {
