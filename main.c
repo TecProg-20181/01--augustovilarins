@@ -53,16 +53,16 @@ Image grey_scale(Image image) {
 
 void blur(Image image, unsigned int blur_scale) {
     for (unsigned int i = 0; i < image.image_height; ++i) {
-        for (unsigned int j = 0; j < image_width; ++j) {
+        for (unsigned int j = 0; j < image.image_width; ++j) {
             Pixel media = {0, 0, 0};
 
             int min_image_height = min(i + blur_scale/2, image.image_height - 1);
             int min_image_width = min(i + blur_scale/2, image.image_width - 1);
             for(unsigned int x = max(0, i - blur_scale/2); x <= min_image_height; ++x) {
                 for(unsigned int y = max(0,j - blur_scale/2); y <= min_image_width; ++y) {
-                    media.r += pixel[x][y][0];
-                    media.g += pixel[x][y][1];
-                    media.b += pixel[x][y][2];
+                    media.red += pixel[x][y].red;
+                    media.green += pixel[x][y].green;
+                    media.blue += pixel[x][y].blue;
                 }
             }
 
@@ -85,27 +85,30 @@ Image rotate_right_90_degrees(Image img) {
 
     for (unsigned int i = 0, y = 0; i < rotated.image_height; ++i, ++y) {
         for (int j = rotated.image_width - 1, x = 0; j >= 0; --j, ++x) {
-            rotated.pixel[i][j][0] = image.pixel[x][y][0];
-            rotated.pixel[i][j][1] = image.pixel[x][y][1];
-            rotated.pixel[i][j][2] = image.pixel[x][y][2];
+            rotated.pixel[i][j].red = image.pixel[x][y].red;
+            rotated.pixel[i][j].green = image.pixel[x][y].green;
+            rotated.pixel[i][j].blue = image.pixel[x][y].blue;
         }
     }
 
     return rotated;
 }
 
-void invert_colors(unsigned short int pixel[512][512][3],
-                    unsigned int image_width, unsigned int image_height) {
-    for (unsigned int i = 0; i < image_height; ++i) {
-        for (unsigned int j = 0; j < image_width; ++j) {
-            pixel[i][j][0] = 255 - pixel[i][j][0];
-            pixel[i][j][1] = 255 - pixel[i][j][1];
-            pixel[i][j][2] = 255 - pixel[i][j][2];
+void invert_colors(Image image) {
+    for (unsigned int i = 0; i < image.image_height; ++i) {
+        for (unsigned int j = 0; j < image.image_width; ++j) {
+            pixel[i][j].red = 255 - pixel[i][j].red;
+            pixel[i][j].green = 255 - pixel[i][j].green;
+            pixel[i][j].blue = 255 - pixel[i][j].blue;
         }
     }
+
+    return image;
+
 }
 
 Image cut_image(Image image, int x, int y, int image_width, int image_height) {
+
     Image cuted;
 
     cuted.image_width = image_width;
@@ -113,9 +116,9 @@ Image cut_image(Image image, int x, int y, int image_width, int image_height) {
 
     for(int i = 0; i < image_height; ++i) {
         for(int j = 0; j < image_width; ++j) {
-            cuted.pixel[i][j][0] = img.pixel[i + y][j + x][0];
-            cuted.pixel[i][j][1] = img.pixel[i + y][j + x][1];
-            cuted.pixel[i][j][2] = img.pixel[i + y][j + x][2];
+            cuted.pixel[i][j].red = img.pixel[i + y][j + x].red;
+            cuted.pixel[i][j].green = img.pixel[i + y][j + x].green;
+            cuted.pixel[i][j].blue = img.pixel[i + y][j + x].blue;
         }
     }
 
