@@ -125,6 +125,31 @@ Image cut_image(Image image, int x, int y, int image_width, int image_height) {
     return cuted;
 }
 
+Image sepia(Image image) {
+    for (unsigned int x = 0; x < image.image_height; ++x) {
+        for (unsigned int j = 0; j < image.image_width; ++j) {
+            unsigned short int pixel[3];
+            pixel[0] = image.pixel[x][j].red;
+            pixel[1] = image.pixel[x][j].green;
+            pixel[2] = image.pixel[x][j].blue;
+
+            unsigned int aux =  pixel[0] * .393 + pixel[1] * .769 + pixel[2] * .189;
+            unsigned int smaller = min(aux, 255);
+            image.pixel[x][j].red = smaller;
+
+            aux =  pixel[0] * .349 + pixel[1] * .686 + pixel[2] * .168;
+            smaller = min(aux, 255);
+            image.pixel[x][j].green = smaller;
+
+            aux =  pixel[0] * .272 + pixel[1] * .534 + pixel[2] * .131;
+            smaller = min(aux, 255);
+            image.pixel[x][j].blue = smaller;
+        }
+    }
+
+    return image;
+}
+
 
 int main() {
     Image image;
